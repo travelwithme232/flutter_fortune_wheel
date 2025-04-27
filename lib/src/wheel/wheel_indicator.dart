@@ -62,7 +62,6 @@ class _WheelIndicator extends StatelessWidget {
         final margins = getCenteredMargins(constraints);
         final offset = _getOffset(indicator.alignment, margins);
         final angle = _getAngle(indicator.alignment);
-
         return Align(
           alignment: indicator.alignment,
           child: Transform.translate(

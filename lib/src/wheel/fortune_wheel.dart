@@ -2,8 +2,7 @@ part of 'wheel.dart';
 
 enum HapticImpact { none, light, medium, heavy }
 
-Offset _calculateWheelOffset(
-    BoxConstraints constraints, TextDirection textDirection) {
+Offset _calculateWheelOffset(BoxConstraints constraints, TextDirection textDirection) {
   final smallerSide = getSmallerSide(constraints);
   var offsetX = constraints.maxWidth / 2;
   if (textDirection == TextDirection.rtl) {
@@ -166,6 +165,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
   FortuneWheel({
     Key? key,
     required this.items,
+    required this.isOpposite,
     this.rotationCount = FortuneWidget.kDefaultRotationCount,
     this.selected = const Stream<int>.empty(),
     this.duration = FortuneWidget.kDefaultDuration,
@@ -187,8 +187,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
   @override
   Widget build(BuildContext context) {
     // Arrow animation: Setting up the AnimationController and Animation
-    final arrowController =
-        useAnimationController(duration: const Duration(milliseconds: 300));
+    final arrowController = useAnimationController(duration: const Duration(milliseconds: 300));
 // Initializes an AnimationController with a duration of 300 milliseconds.
 // This controller manages the timing of the animation.
 
@@ -196,8 +195,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
       CurvedAnimation(
         parent: arrowController,
         curve: Curves.easeOut, // Curve for the forward animation (ease out)
-        reverseCurve:
-            Curves.easeIn, // Curve for the reverse animation (ease in)
+        reverseCurve: Curves.easeIn, // Curve for the reverse animation (ease in)
       ),
     );
 // Creates an Animation that interpolates from 0 to -20 using a Tween.
@@ -268,24 +266,19 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
                 final size = MediaQuery.of(context).size;
                 final meanSize = (size.width + size.height) / 2;
                 final panFactor = 6 / meanSize;
-
                 return LayoutBuilder(builder: (context, constraints) {
                   final wheelData = _WheelData(
                     constraints: constraints,
                     itemCount: items.length,
                     textDirection: Directionality.of(context),
                   );
-
-                  final isAnimatingPanFactor =
-                      rotateAnimCtrl.isAnimating ? 0 : 1;
-                  final selectedAngle =
-                      -2 * _math.pi * (selectedIndex.value / items.length);
-                  final panAngle =
-                      panState.distance * panFactor * isAnimatingPanFactor;
-                  final rotationAngle = _getAngle(rotateAnim.value);
+                  final isAnimatingPanFactor = rotateAnimCtrl.isAnimating ? 0 : 1;
+                  final selectedAngle = -2 * _math.pi * (selectedIndex.value / items.length);
+                  final panAngle = panState.distance * panFactor * isAnimatingPanFactor;
+                  // ignore: lines_longer_than_80_chars
+                  final rotationAngle = _getAngle(isOpposite ? -rotateAnim.value : rotateAnim.value);
                   final alignmentOffset = _calculateAlignmentOffset(alignment);
                   final totalAngle = selectedAngle + panAngle + rotationAngle;
-
                   final focusedIndex = _borderCross(
                     totalAngle,
                     lastVibratedAngle,
@@ -301,9 +294,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
                     for (var i = 0; i < items.length; i++)
                       TransformedFortuneItem(
                         item: items[i],
-                        angle: totalAngle +
-                            alignmentOffset +
-                            _calculateSliceAngle(i, items.length),
+                        angle: totalAngle + alignmentOffset + _calculateSliceAngle(i, items.length),
                         offset: wheelData.offset,
                       ),
                   ];
@@ -381,4 +372,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     lastVibratedAngle.value = (angleDegrees ~/ step) * step;
     return index;
   }
+
+  @override
+  bool isOpposite;
 }

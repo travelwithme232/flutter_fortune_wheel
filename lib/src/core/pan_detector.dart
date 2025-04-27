@@ -190,12 +190,9 @@ class CircularPanPhysics extends PanPhysics {
     final yChange = details.delta.dy.abs();
     final xChange = details.delta.dx.abs();
 
-    final verticalRotation = (onRightSide && panDown) || (onLeftSide && panUp)
-        ? yChange
-        : yChange * -1;
+    final verticalRotation = (onRightSide && panDown) || (onLeftSide && panUp) ? yChange : yChange * -1;
 
-    final horizontalRotation =
-        (onTop && panRight) || (onBottom && panLeft) ? xChange : xChange * -1;
+    final horizontalRotation = (onTop && panRight) || (onBottom && panLeft) ? xChange : xChange * -1;
 
     final rotationalChange = verticalRotation + horizontalRotation;
 
@@ -204,8 +201,7 @@ class CircularPanPhysics extends PanPhysics {
 
   /// {@macro flutter_fortune_wheel.PanPhysics.handlePanEnd}
   void handlePanEnd(DragEndDetails details) {
-    if ((allowOppositeRotationFlung ? value.distance.abs() : value.distance) >
-            100 &&
+    if ((allowOppositeRotationFlung ? value.distance.abs() : value.distance) > 100 &&
         details.velocity.pixelsPerSecond.distance.abs() > 300) {
       value = value.copyWith(isPanning: false, wasFlung: true);
     } else {
@@ -349,8 +345,7 @@ class PanAwareBuilder extends HookWidget {
         child: AnimatedBuilder(
             animation: returnAnim,
             builder: (context, _) {
-              final mustApplyEasing = returnAnimCtrl.isAnimating ||
-                  returnAnimCtrl.status == AnimationStatus.completed;
+              final mustApplyEasing = returnAnimCtrl.isAnimating || returnAnimCtrl.status == AnimationStatus.completed;
 
               if (mustApplyEasing) {
                 panState = panState.copyWith(

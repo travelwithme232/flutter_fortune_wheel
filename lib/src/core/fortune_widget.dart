@@ -8,6 +8,8 @@ part of 'core.dart';
 ///  * [FortuneBar]
 ///  * [FortuneItem]
 abstract class FortuneWidget implements Widget {
+  bool isOpposite = false;
+
   /// The default value for [duration] (currently **5 seconds**).
   static const Duration kDefaultDuration = Duration(seconds: 5);
 

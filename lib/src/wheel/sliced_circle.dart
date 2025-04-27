@@ -17,8 +17,7 @@ class _TransformedCircleSlice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = item.style ??
-        styleStrategy.getItemStyle(theme, index, wheelData.itemCount);
+    final style = item.style ?? styleStrategy.getItemStyle(theme, index, wheelData.itemCount);
 
     return _CircleSliceLayout(
       handler: item,
