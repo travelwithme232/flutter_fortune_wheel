@@ -201,6 +201,7 @@ class CircularPanPhysics extends PanPhysics {
 
   /// {@macro flutter_fortune_wheel.PanPhysics.handlePanEnd}
   void handlePanEnd(DragEndDetails details) {
+    print(allowOppositeRotationFlung);
     if ((allowOppositeRotationFlung ? value.distance.abs() : value.distance) > 100 &&
         details.velocity.pixelsPerSecond.distance.abs() > 300) {
       value = value.copyWith(isPanning: false, wasFlung: true);

@@ -165,7 +165,6 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
   FortuneWheel({
     Key? key,
     required this.items,
-    required this.isOpposite,
     this.rotationCount = FortuneWidget.kDefaultRotationCount,
     this.selected = const Stream<int>.empty(),
     this.duration = FortuneWidget.kDefaultDuration,
@@ -252,12 +251,12 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     }, []);
 
     final lastVibratedAngle = useRef<double>(0);
-
     return PanAwareBuilder(
       behavior: HitTestBehavior.translucent,
       physics: physics,
       onFling: onFling,
       builder: (context, panState) {
+        if (panState.distance != 0.0) isCounterClock = panState.distance < 0;
         return Stack(
           children: [
             AnimatedBuilder(
@@ -276,7 +275,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
                   final selectedAngle = -2 * _math.pi * (selectedIndex.value / items.length);
                   final panAngle = panState.distance * panFactor * isAnimatingPanFactor;
                   // ignore: lines_longer_than_80_chars
-                  final rotationAngle = _getAngle(isOpposite ? -rotateAnim.value : rotateAnim.value);
+                  final rotationAngle = _getAngle(isCounterClock ? -rotateAnim.value : rotateAnim.value);
                   final alignmentOffset = _calculateAlignmentOffset(alignment);
                   final totalAngle = selectedAngle + panAngle + rotationAngle;
                   final focusedIndex = _borderCross(
@@ -372,7 +371,6 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     lastVibratedAngle.value = (angleDegrees ~/ step) * step;
     return index;
   }
-
-  @override
-  bool isOpposite;
 }
+
+bool isCounterClock = false;
